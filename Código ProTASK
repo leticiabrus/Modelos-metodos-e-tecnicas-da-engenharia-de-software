@@ -1,0 +1,156 @@
+// Autenticação
+
+public class Autenticacao {
+    private ControladorAutenticacao controlador;
+    private HistoricoLogin historico;
+
+    public Autenticacao() {
+        this.controlador = new ControladorAutenticacao();
+        this.historico = new HistoricoLogin();
+    }
+
+    public boolean autenticar(String usuario, String senha) {
+        boolean autenticado = controlador.verificarCredenciais(usuario, senha);
+
+        if (autenticado) {
+            historico.adicionarRegistro(usuario);
+        }
+
+        return autenticado;
+    }
+}
+
+public class ControladorAutenticacao {
+    public boolean verificarCredenciais(String usuario, String senha) {
+        return true;
+    }
+}
+
+public class HistoricoLogin {
+    public void adicionarRegistro(String usuario) {
+    }
+}
+
+public class TokenSessao {
+    public String gerarToken(String usuario) {
+        return "token_gerado"; 
+    }
+}
+
+// Módulo de Registro
+
+public class RegistroUsuario {
+    private ControladorRegistro controlador;
+    private ValidacaoRegistro validacao;
+    private ArmazenamentoUsuario armazenamento;
+    private EmailConfirmacao email;
+
+    public RegistroUsuario() {
+        this.controlador = new ControladorRegistro();
+        this.validacao = new ValidacaoRegistro();
+        this.armazenamento = new ArmazenamentoUsuario();
+        this.email = new EmailConfirmacao();
+    }
+
+    public void registrarUsuario(DadosUsuario dadosUsuario) {
+        if (validacao.validarDados(dadosUsuario)) {
+            armazenamento.armazenarDados(dadosUsuario);
+            email.enviarConfirmacao(dadosUsuario.getEmail());
+        }
+    }
+}
+
+public class DadosUsuario {
+    private String nome;
+    private String email;
+    private String senha;
+
+    public DadosUsuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+}
+
+// TERCEIRO
+public class ControladorRegistro {
+    
+}
+
+//QUARTO
+public class ValidacaoRegistro {
+    public boolean validarDados(DadosUsuario dadosUsuario) {
+        return true; //
+    }
+}
+
+//QUINTO
+public class ArmazenamentoUsuario {
+    public void armazenarDados(DadosUsuario dadosUsuario) {
+        
+    }
+}
+
+//SEXTO
+public class EmailConfirmacao {
+    public void enviarConfirmacao(String email) {
+        
+    }
+}
+
+// Módulo de Abertura de Sprint
+
+//PRIMEIRO
+public class AberturaSprint {
+    private ControladorAberturaSprint controlador;
+    private ValidacaoSprint validacao;
+    private BancoDadosSprints bancoDados;
+    private NotificacaoSprint notificacao;
+
+    public AberturaSprint() {
+        this.controlador = new ControladorAberturaSprint();
+        this.validacao = new ValidacaoSprint();
+        this.bancoDados = new BancoDadosSprints();
+        this.notificacao = new NotificacaoSprint();
+    }
+
+    public void abrirSprint(DadosSprint dadosSprint) {
+        if (validacao.validarDados(dadosSprint)) {
+            bancoDados.salvarSprint(dadosSprint);
+            notificacao.notificarNovaSprint();
+        }
+    }
+}
+
+//SEGUNDO
+public class ControladorAberturaSprint {
+}
+
+//TERCEIRO
+public class ValidacaoSprint {
+    public boolean validarDados(DadosSprint dadosSprint) {
+        return true; 
+    }
+}
+
+//QUARTO
+public class BancoDadosSprints {
+    public void salvarSprint(DadosSprint dadosSprint) {
+        
+    }
+}
+
+//QUINTO
+public class NotificacaoSprint {
+    public void notificarNovaSprint() {
+        
+    }
+}
+
+//SEXTO
+public class DadosSprint {
+    
+}
+
+
+
