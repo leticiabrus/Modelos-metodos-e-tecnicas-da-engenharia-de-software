@@ -1,0 +1,654 @@
+RELATÓRIO ANÁLISE DE PROJETO – DESIGN E PADRÕES
+
+Nome: Letícia Brudeck.
+1.	Testar códigos para dois padrões do Criacão (um para classe e um para objeto) e explicar o funcionamento dos padrões;
+Factory Method: O padrão Factory Method é um padrão de projeto de criação que fornece uma interface para criar objetos em uma superclasse, mas permite que as subclasses alterem o tipo de objetos que serão criados. Ele encapsula a criação de objetos e fornece uma maneira de delegar a responsabilidade para as subclasses. Este padrão é útil quando uma classe não pode antecipar a classe dos objetos que ela precisa criar.
+Código analisado: 
+/**
+* Engenharia de Software Moderna - Padrões de Projeto (Cap. 6)
+* Prof. Marco Tulio Valente
+* 
+* Exemplo do padrão de projeto Fábrica
+*
+*/
+
+/**
+* Interface e classe dos objetos que serão fabricados.
+*/
+
+interface Channel {}
+
+class TCPChannel implements Channel {}
+
+class UDPChannel implements Channel {}
+
+
+/**
+* A classe ChannelFactory implementa um método fábrica estático.
+* Isto é, um método que centraliza a criação de objetos que
+* implementam a interface Channel
+*
+* Se amanhã quisermos que o sistema use UDPChannel, basta
+* mudar a implementação de create()
+*/
+
+class ChannelFactory {
+  
+  public static Channel create() { // método fábrica estático
+    System.out.println("Neste momento, estamos trabalhando com TCPChannel");
+    return new TCPChannel();
+  }
+
+}
+
+public class Main { 
+
+  void f() {
+    Channel c = ChannelFactory.create();  
+  }
+
+  void g() {
+    Channel c = ChannelFactory.create();
+  }
+  
+  void h() {
+    Channel c = ChannelFactory.create();
+  }
+  
+  public static void main(String [] args) {
+     Main m = new Main();
+     m.f();
+     m.g();
+     m.h(); 
+  }
+
+}
+
+Análise do código: Esse código Java demonstra o uso do padrão de projeto chamado "Factory Method" (Método Fábrica). Este padrão pertence à categoria dos padrões de criação e fornece uma interface para criar uma instância de uma classe, mas permite que as subclasses alterem o tipo de objetos que serão criados.
+Interface Channel:
+Define a interface que as classes concretas (TCPChannel e UDPChannel) implementarão.
+java
+Copy code
+interface Channel {}
+Classes Concretas TCPChannel e UDPChannel:
+Implementam a interface Channel.
+java
+Copy code
+class TCPChannel implements Channel {}
+class UDPChannel implements Channel {}
+Classe ChannelFactory:
+Possui um método fábrica estático chamado create() que retorna uma instância da interface Channel.
+Atualmente, o método cria e retorna um objeto TCPChannel.
+A ideia é que, se no futuro você decidir mudar de TCPChannel para UDPChannel, você só precisará alterar a implementação dentro do método create().
+java
+Copy code
+class ChannelFactory {
+  public static Channel create() {
+    System.out.println("Neste momento, estamos trabalhando com TCPChannel");
+    return new TCPChannel();
+  }
+}
+Classe Main:
+Contém métodos f(), g(), e h(), que demonstram a criação de objetos Channel usando o método fábrica create() da classe ChannelFactory.
+O método main cria uma instância da classe Main e chama esses métodos para exemplificar o uso do padrão.
+java
+Copy code
+public class Main {
+  void f() {
+    Channel c = ChannelFactory.create();
+  }
+
+  void g() {
+    Channel c = ChannelFactory.create();
+  }
+
+  void h() {
+    Channel c = ChannelFactory.create();
+  }
+
+  public static void main(String[] args) {
+    Main m = new Main();
+    m.f();
+    m.g();
+    m.h();
+  }
+}
+
+
+Em resumo, este código utiliza o padrão de projeto Factory Method para encapsular a criação de objetos do tipo Channel. O método fábrica estático na classe ChannelFactory é responsável por criar e retornar uma instância da interface Channel. Se necessário, a implementação desse método pode ser alterada para criar um tipo diferente de objeto Channel sem modificar o restante do código. 
+
+Builder: 
+O padrão Builder é um padrão de projeto de criação que é usado para construir um objeto complexo passo a passo. Ele separa a construção de um objeto de sua representação, permitindo a criação de diferentes representações do mesmo objeto. Isso é particularmente útil quando um objeto tem muitos parâmetros opcionais e você deseja evitar construtores com muitos argumentos.
+Código analisado: 
+/**
+* Engenharia de Software Moderna - Padrões de Projeto (Cap. 6)
+* Prof. Marco Tulio Valente
+* 
+* Exemplo do padrão de projeto Builder
+*
+*/
+
+class Livro {
+   private String nome;
+   private String autores;
+   private String editora;
+   private String ano;
+  
+   private Livro (String nome, String autores, String editora, String ano) {
+     this.nome = nome;
+     this.autores = autores;
+     this.editora = editora;
+     this.ano = ano;
+   }
+  
+   public String toString() {
+     return nome + ". " + autores + "," + editora + "," + ano;      
+   }
+    
+   /**
+   * Livro.Builder é uma classe interna, pública e estática de Livro. 
+   * Por isso, é que podemos chamar "new Livro.Builder()" diretamente, 
+   * sem precisar de instanciar antes um objeto do tipo Livro.
+   *
+   */
+   public static class Builder {
+     private String nome;
+     private String autores;
+     private String editora;
+     private String ano; 
+     
+     public Builder setNome(String nome) {
+        this.nome = nome;
+        return this;
+     }
+
+     public Builder setAutores(String autores) {
+        this.autores = autores;
+        return this;
+     }
+     
+     public Builder setEditora(String editora) {
+        this.editora = editora;
+        return this;
+     }
+     
+     public Builder setAno(String ano) {
+        this.ano = ano;
+        return this;
+     }
+     
+     public Livro build() {
+        return new Livro(nome, autores, editora, ano); 
+     }
+  }
+  
+}
+
+
+public class Main {
+  public static void main(String [] args) {
+     Livro esm = new Livro.Builder()
+                          .setNome("Engenharia Soft Moderna")
+                          .setEditora("UFMG")
+                          .setAno("2020")
+                          .build();
+     System.out.println("Livro 1: " + esm.toString());
+     
+     Livro gof = new Livro.Builder()
+                          .setNome("Design Patterns")
+                          .setAutores("GoF")
+                          .setAno("1995")
+                          .build();
+     System.out.println("Livro 2: " + gof.toString());                        
+  }
+}
+
+O código fornecido implementa o padrão de projeto Builder em Java. O padrão Builder é usado para construir objetos complexos passo a passo. Ele separa a construção de um objeto complexo de sua representação, permitindo a criação de diferentes representações do mesmo objeto.
+
+No código fornecido, a classe Livro é a classe principal que representa o objeto a ser construído, e a classe interna Builder é usada para construir instâncias da classe Livro.
+
+Aqui estão alguns pontos importantes:
+
+Classe Livro:
+
+A classe Livro possui atributos privados como nome, autores, editora e ano.
+Possui um construtor privado que é chamado apenas pela classe interna Builder.
+Possui um método toString() que retorna uma representação em formato de string do objeto Livro.
+
+Classe Builder:
+
+A classe interna Builder é uma classe estática e pública dentro da classe Livro.
+Contém atributos correspondentes aos atributos da classe Livro.
+Métodos set são fornecidos para configurar os valores dos atributos.
+O método build() cria e retorna uma instância de Livro com os valores configurados.
+
+Método Main:
+
+No método main, duas instâncias de Livro são criadas usando a classe Builder.
+Para cada instância, são chamados métodos set para configurar os atributos desejados.
+O método build() finaliza a construção do objeto Livro.
+As instâncias resultantes são impressas no console.
+
+O padrão Builder é útil quando um objeto possui muitos atributos opcionais ou quando a ordem de configuração dos atributos é importante. Ele fornece uma interface mais fluente para a criação de objetos e melhora a legibilidade do código. No exemplo, a utilização do padrão Builder permite a criação de instâncias de Livro de forma mais expressiva e fácil de entender.
+
+2.	Testar códigos para dois padrões de Estrutura (um para classe e um para objeto) e explicar o funcionamento dos padrões;	
+
+Class Adapter: O padrão de projeto "Class Adapter" é um padrão estrutural que permite que a interface de uma classe existente seja usada como uma interface desejada. Ele atua como um adaptador entre duas interfaces incompatíveis, permitindo que uma classe existente seja usada onde uma outra interface é esperada.
+
+A estrutura do padrão de projeto Class Adapter envolve uma classe adaptadora que herda de uma classe existente e também implementa a interface desejada. Essa classe adaptadora altera a interface da classe existente para a interface alvo, tornando assim a classe existente compatível com o código que espera a nova interface.
+
+O Class Adapter é uma forma de implementar a adaptação de interfaces usando herança. Vale ressaltar que, em Java, a herança única pode limitar a flexibilidade dessa abordagem, e em alguns casos, a composição pode ser uma alternativa mais adequada.
+
+Código analisado: 
+
+/**
+* Engenharia de Software Moderna - Padrões de Projeto (Cap. 6)
+* Prof. Marco Tulio Valente
+* 
+* Exemplo do padrão de projeto Adaptador
+*
+*/
+
+
+/**
+* Classe concreta, representando um projetor da Samsung
+*/
+class ProjetorSamsung {
+  
+  public void turnOn() { 
+    System.out.println("Ligando projetor da Samsung");
+  }
+
+}
+
+
+/**
+* Classe concreta, representando um projetor da LG
+*/
+class ProjetorLG {
+
+  public void enable(int timer) {
+    System.out.println("Ligando projetor da LG em " + timer + " minutos");
+  }
+
+}
+
+/**
+* Interface para "abstrair" o tipo de projetor (Samsung ou LG)
+*/
+interface Projetor {
+  void liga();
+}
+
+/**
+* Adaptador de ProjetorSamsung para Projetor
+* Um objeto da classe a seguir é um Projetor (pois implementa essa interface), 
+* mas internamente repassa toda chamada de método para o objeto adaptado 
+* (no caso, um ProjetorSamssung)
+*/
+class AdaptadorProjetorSamsung implements Projetor {
+
+   private ProjetorSamsung projetor;
+
+   AdaptadorProjetorSamsung (ProjetorSamsung projetor) {
+     this.projetor = projetor;
+   }
+
+   public void liga() {
+     projetor.turnOn(); // chama método do objeto adaptado (ProjetorSamsung)
+   }
+  
+}
+
+
+/**
+* Idem classe anterior, mas agora adaptando ProjetoLG para Projetor 
+*/
+class AdaptadorProjetorLG implements Projetor {
+
+   private ProjetorLG projetor;
+
+   AdaptadorProjetorLG (ProjetorLG projetor) {
+     this.projetor = projetor;
+   }
+
+   public void liga() {
+     projetor.enable(0); // chama método de objeto adaptado (ProjetorLG)
+   }
+  
+}
+
+
+class SistemaControleProjetores { // não tem conhecimento de "projetores concretos"
+  
+  void init(Projetor projetor) {
+    projetor.liga();  // liga qualquer projetor, sem precisar saber se é Samsung ou LG
+  }
+
+}
+
+class Main {
+  
+  public static void main(String[] args) {
+     AdaptadorProjetorSamsung samsung = new AdaptadorProjetorSamsung(new ProjetorSamsung());
+     AdaptadorProjetorLG lg = new AdaptadorProjetorLG(new ProjetorLG());
+     SistemaControleProjetores scp = new SistemaControleProjetores();
+     scp.init(samsung); // recebem como parâmetros objetos adaptadores, 
+     scp.init(lg);      // que possuem internamente objetos (isto é, projetores) concretos
+  }
+
+}
+
+Análise do código: 
+Classes ProjetorSamsung e ProjetorLG:
+Representam classes concretas de projetores da Samsung e da LG, respectivamente.
+ProjetorSamsung possui um método turnOn().
+ProjetorLG possui um método enable(int timer).
+
+Interface Projetor:
+Define uma interface comum para os diferentes tipos de projetores.
+
+Adaptadores (AdaptadorProjetorSamsung e AdaptadorProjetorLG):
+Implementam a interface Projetor e encapsulam objetos concretos ProjetorSamsung e ProjetorLG.
+Redirecionam as chamadas de método da interface Projetor para os métodos específicos dos projetores concretos.
+Classe SistemaControleProjetores:
+Não tem conhecimento de implementações concretas de projetores, apenas utiliza a interface Projetor.
+Pode ligar qualquer projetor sem saber se é Samsung ou LG.
+
+Método main da classe Main:
+Cria instâncias dos adaptadores (AdaptadorProjetorSamsung e AdaptadorProjetorLG) e do sistema de controle de projetores (SistemaControleProjetores).
+Inicializa o sistema de controle com os adaptadores como parâmetros.
+O padrão de projeto Adaptador permite que objetos com interfaces incompatíveis trabalhem juntos. No caso deste código, os adaptadores (AdaptadorProjetorSamsung e AdaptadorProjetorLG) permitem que os projetores da Samsung e da LG sejam usados de maneira uniforme através da interface comum Projetor. O sistema de controle de projetores (SistemaControleProjetores) pode ligar qualquer projetor, sem precisar conhecer os detalhes específicos de cada implementação concreta de projetor.
+Decorator: 
+O padrão de projeto Decorator é um padrão estrutural que permite adicionar comportamentos a objetos individuais, seja de forma estática (em tempo de compilação) ou dinâmica (em tempo de execução), sem alterar a estrutura da classe. O Decorator é uma alternativa flexível à herança para estender as funcionalidades de uma classe.
+A principal ideia é envolver um objeto existente em um novo objeto especializado que adiciona ou altera comportamentos específicos. Cada decorador repassa chamadas de métodos para o componente que está sendo decorado, podendo executar lógica adicional antes ou depois.
+A flexibilidade do padrão Decorator permite que você combine diferentes decoradores de maneiras variadas para criar uma gama ampla de objetos com comportamentos diferentes, tudo isso sem alterar as classes concretas.
+Em resumo, o Decorator é útil quando você precisa adicionar funcionalidades a objetos de forma flexível e reutilizável, sem usar herança. Ele segue o princípio de aberto/fechado (open/closed), que significa que você pode estender as funcionalidades sem modificar o código existente.
+
+
+
+
+
+
+Código analisado: 
+
+/**
+* Engenharia de Software Moderna - Padrões de Projeto (Cap. 6)
+* Prof. Marco Tulio Valente
+* 
+* Exemplo do padrão de projeto Decorador
+*
+*/
+
+/* 
+* Decoradores implementam sempre a interface Channel
+*/
+interface Channel {
+   void send(String msg); 
+   String receive();
+}
+
+
+/**
+* TCPChannel é uma canal de comunicação concreto (que usa protocolo TCP)
+* E, por isso, é a classe final de uma cadeia de decoradores
+*/
+class TCPChannel implements Channel {
+  
+   public void send(String m) {
+      System.out.println("Canal concreto (TCP) enviando > " + m);
+   }
+  
+   public String receive() {
+     System.out.println("Canal concreto (TCP) recebendo...");
+     return "José";
+   }
+
+}
+
+
+/**
+* Todos os decoradores são subclasse de ChannelDecorator
+*/
+class ChannelDecorator implements Channel {
+   protected Channel channel;
+
+  public ChannelDecorator(Channel channel) {
+     this.channel = channel;
+  }
+  
+  public void send(String m) {
+     channel.send(m);
+  }
+  
+  public String receive() {
+     return channel.receive();
+  }
+  
+}
+
+/**
+* Decorador que:
+*  - compacta mensagens antes de enviar (send)
+*  - descompacta mensagens depois de receber (receiver)
+*/
+class ZipChannel extends ChannelDecorator {
+  
+   public ZipChannel(Channel c) {
+      super(c);
+   }
+   
+   public void send(String m)  {
+      System.out.println("Decorador compactando > " + m);
+      super.send(m);
+   }
+   
+   public String receive()  {
+      String m = super.receive();
+      System.out.println("Decorador descompactando < " + m);
+      return m;
+   }
+  
+}
+
+public class Main {
+  
+    public static void main(String args[]) {
+       Channel c = new ZipChannel(new TCPChannel());
+       c.send("Qual seu nome?");
+       String r = c.receive();
+       System.out.println(r);
+    }   
+
+}
+
+
+Análise do código: 
+A funcionalidade principal demonstrada é a capacidade de decorar um canal de comunicação (TCPChannel) com um decorador específico (ZipChannel). O ZipChannel adiciona a funcionalidade de compactação/descompactação às operações de envio e recebimento do canal original. O padrão Decorator permite que novas funcionalidades sejam adicionadas dinamicamente sem modificar as classes existentes.
+
+3.	Testar códigos para dois padrões Comportamental (um para classe e um para objeto) e explicar o funcionamento dos padrões.
+
+Template Method: O padrão de projeto Template Method é um padrão comportamental que define a estrutura de um algoritmo em uma classe base, mas permite que subclasses alterem partes específicas desse algoritmo sem alterar sua estrutura geral. Ele é utilizado quando você tem um algoritmo comum a várias classes, mas algumas etapas desse algoritmo podem variar entre as classes.
+
+Código analisado: 
+
+/**
+* Engenharia de Software Moderna - Padrões de Projeto (Cap. 6)
+* Prof. Marco Tulio Valente
+* 
+* Exemplo do padrão de projeto Template Method
+*
+*/
+
+/**
+* Classe que implementa um Template Method (calcSalarioLiquido)
+* Veja que essa classe é abstrata
+*/
+abstract class Funcionario {
+
+   protected double salario;
+
+   public Funcionario(double salario) {
+     this.salario = salario;
+   }
+  
+   abstract double calcDescontosPrevidencia();
+   abstract double calcDescontosPlanoSaude();
+   abstract double calcOutrosDescontos();
+
+   /**
+   * Template Method: define o esqueleto de um algoritmo
+   * Ele ainda é um "template" porque os métodos chamados são abstratos
+   */
+   public double calcSalarioLiquido() { 
+     double prev = calcDescontosPrevidencia();
+     double saude = calcDescontosPlanoSaude();
+     double outros = calcOutrosDescontos();
+     return salario - prev - saude - outros;
+   }
+}
+
+/** 
+* Subclasse que implementa os métodos abstratos chamados pelo Template Method
+* Ela vai herdar o template method (calcSalarioLiquido)
+* Mas vai ter que implementar os métodos abstrados chamados por ele
+*/
+class FuncionarioCLT extends Funcionario {
+  
+  public FuncionarioCLT(double salario) {
+     super(salario);
+  }
+  
+  // implementa método abstrato
+  double calcDescontosPrevidencia() { 
+     return salario * 0.1;   // somente um exemplo
+  }
+  
+  // implementa método abstrato
+  double calcDescontosPlanoSaude() {
+     return 100.0;
+  }
+  
+  // implementa método abstrato 
+  double calcOutrosDescontos() {
+    return 20.0;
+  }
+  
+}
+
+class Main {
+  
+  public static void main(String[] args) {   
+    FuncionarioCLT func = new FuncionarioCLT(1000);
+    double salario = func.calcSalarioLiquido();
+    System.out.println("Salário Líquido: " + salario);  
+  }
+  
+}
+
+
+
+Análise do código: 
+
+Resumidamente, o padrão de projeto Template Method permite definir a estrutura geral de um algoritmo em uma classe base, enquanto as subclasses podem fornecer implementações específicas para determinadas etapas desse algoritmo. No exemplo fornecido, a estrutura do cálculo do salário líquido é definida na classe abstrata Funcionario, enquanto os detalhes específicos para um funcionário CLT são implementados na classe concreta FuncionarioCLT.
+
+
+Observer: 
+
+O padrão de projeto Observador é um padrão de comportamento (behavioral pattern) que define uma relação de um-para-muitos entre objetos de modo que, quando o estado de um objeto muda, todos os seus dependentes são notificados e atualizados automaticamente. Ele é frequentemente usado para implementar a distribuição de eventos em sistemas de software.
+
+Código analisado: 
+
+/**
+* Engenharia de Software Moderna - Padrões de Projeto (Cap. 6)
+* Prof. Marco Tulio Valente
+* 
+* Exemplo do padrão de projeto Observador
+*
+*/
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+/**
+* Classe Subject (que faz parte da implementação interna do padrão)
+* Todo sujeito deve herdar dessa classe
+* Ela inclui métodos para adicionar, remover e notificar os
+* observadores desse sujeito
+*
+*/
+class Subject {
+  
+  private List<Observer> observers = new ArrayList<Observer>();
+  
+  public void addObserver(Observer observer) {
+    observers.add(observer);
+  }
+  
+  public void removeObserver(Observer observer) {
+    observers.remove(observer);
+  }
+  
+  public void notifyObservers() {
+    Iterator<Observer> it = observers.iterator();
+    while (it.hasNext()) {
+      Observer obs= it.next();
+      obs.update(this); 
+    }
+  }
+  
+}
+
+/**
+* Interface Observer (também faz parte da implementação interna do padrão)
+* Todo observador deve implementar essa interface
+*/
+interface Observer {
+  public void update(Subject s);
+}
+
+
+/**
+* Temperatura são sujeitos (isto é, objetos que podem ser observados)
+*/
+class Temperatura extends Subject  {
+   private double temp;
+   
+   public double getTemp() {
+     return temp;
+   }
+  
+   public void setTemp(double temp) {
+     this.temp = temp;
+     notifyObservers(); // notifica os meus observadores
+   }
+  
+}
+
+
+/**
+* TermometroCelsius são observadores (de Temperatura)
+*/
+class TermometroCelsius implements Observer  {
+  
+  public void update(Subject s) { // método chamado quando o valores de uma temperatura mudam
+    double temp = ((Temperatura) s).getTemp();
+    System.out.println("Temperatura Celsius: " + temp);
+  }
+
+}
+
+public class Main {
+  
+  public static void  main(String [] args) {
+    Temperatura t = new Temperatura();
+    t.addObserver(new TermometroCelsius ());
+    t.setTemp(100.0); // muda temperatura; logo, observadores são notificados
+  }
+
+}
+
+Análise do código: 
+
+O código fornecido demonstra a implementação do padrão de projeto Observador em um contexto de monitoramento de temperatura. Resumidamente, este exemplo implementa um sistema simples de monitoramento de temperatura usando o padrão de projeto Observador. A classe Temperatura é o sujeito observável, e TermometroCelsius é um observador que imprime a temperatura em Celsius quando notificado sobre mudanças na temperatura. O padrão Observador facilita a adição de novos observadores sem modificar o código do sujeito observável.
