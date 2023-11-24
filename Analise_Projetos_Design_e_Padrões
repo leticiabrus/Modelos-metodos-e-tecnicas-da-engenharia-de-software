@@ -1,6 +1,5 @@
 RELATÓRIO ANÁLISE DE PROJETO – DESIGN E PADRÕES
 
-Nome: Letícia Brudeck.
 1.	Testar códigos para dois padrões do Criacão (um para classe e um para objeto) e explicar o funcionamento dos padrões;
 Factory Method: O padrão Factory Method é um padrão de projeto de criação que fornece uma interface para criar objetos em uma superclasse, mas permite que as subclasses alterem o tipo de objetos que serão criados. Ele encapsula a criação de objetos e fornece uma maneira de delegar a responsabilidade para as subclasses. Este padrão é útil quando uma classe não pode antecipar a classe dos objetos que ela precisa criar.
 Código analisado: 
