@@ -1,0 +1,30 @@
+Importações:
+
+import org.junit.*;: Importa classes relacionadas ao framework JUnit, que é utilizado para realizar testes em Java.
+import static org.junit.Assert.*;: Importa métodos estáticos da classe Assert para facilitar a escrita dos testes.
+import org.mockito.Mockito;: Importa a classe Mockito do framework Mockito para criar objetos simulados (mocks).
+import static org.mockito.Mockito.when;: Importa o método estático when de Mockito para configurar comportamentos nos mocks.
+import static org.mockito.Matchers.anyInt;: Importa o método estático anyInt de Mockito para indicar que qualquer valor inteiro pode ser usado como argumento em um mock.
+Classe de Teste:
+
+public class BookSearchTest {: Define a classe de teste BookSearchTest.
+Inicialização do Mock:
+
+private BookService service;: Declara uma variável service do tipo BookService.
+@Before public void init() { ... }: Método que é executado antes de cada teste.
+service = Mockito.mock(BookService.class);: Cria um mock da classe BookService e atribui à variável service.
+when(service.search(anyInt())).thenReturn(BookConst.NULLBOOK);: Configura o mock para retornar BookConst.NULLBOOK quando o método search for chamado com qualquer argumento inteiro.
+when(service.search(1234)).thenReturn(BookConst.ESM);: Configura o mock para retornar BookConst.ESM quando o método search for chamado com o argumento 1234.
+when(service.search(5678)).thenReturn(BookConst.HP);: Configura o mock para retornar BookConst.HP quando o método search for chamado com o argumento 5678.
+Testes:
+
+@Test public void testGetBook() { ... }: Define um teste para o método getBook da classe BookSearch.
+
+BookSearch bs = new BookSearch(service);: Cria uma instância da classe BookSearch passando o mock service.
+
+String titulo = bs.getBook(1234).getTitulo();: Chama o método getBook com o argumento 1234 e obtém o título.
+
+assertEquals("Eng Soft Moderna", titulo);: Verifica se o título retornado é "Eng Soft Moderna" usando o método assertEquals.
+
+Os outros testes (testGetAnotherBook e testGetNullBook) seguem a mesma estrutura, mas com diferentes argumentos e valores esperados.
+
